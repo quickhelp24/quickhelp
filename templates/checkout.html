@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+.container { display: flex; gap: 30px; flex-wrap: wrap; }
+.left { flex: 2; }
+.right { flex: 1; background: #f0fdf4; padding: 15px; border-radius: 10px; }
+
+input, button {
+  width: 100%;
+  padding: 10px;
+  margin-top: 8px;
+}
+
+button {
+  background: green;
+  color: white;
+  border: none;
+}
+</style>
+</head>
+
+<body style="background:#f3f4f6;">
+
+<h2>Complete Booking</h2>
+
+<div class="container">
+
+<div class="left">
+<form method="POST" action="/submit" enctype="multipart/form-data">
+
+<input type="hidden" name="option" value="{{option}}">
+
+<input type="text" name="name" placeholder="Name" required>
+<input type="text" name="phone" placeholder="Phone" required>
+<input type="text" name="address" placeholder="Address" required>
+
+
+<label>Date</label>
+<input type="date" name="date" id="dateInput" required>
+<script>
+const today = new Date().toISOString().split('T')[0];
+document.getElementById("dateInput").setAttribute("min", today);
+</script>
+
+<label>Time</label>
+<input type="time" name="time" id="timeInput" min="07:00" max="20:00" required>
+<script>
+function setMinTime() {
+    const timeInput = document.getElementById("timeInput");
+    const dateInput = document.getElementById("dateInput");
+
+    const now = new Date();
+    const selectedDate = dateInput.value;
+    const today = new Date().toISOString().split('T')[0];
+
+    if (selectedDate === today) {
+        // Add 1 hour
+        now.setHours(now.getHours() + 1);
+
+        let hours = String(now.getHours()).padStart(2, '0');
+        let minutes = String(now.getMinutes()).padStart(2, '0');
+
+        timeInput.min = hours + ":" + minutes;
+    } else {
+        timeInput.min = "06:00";
+    }
+}
+
+// run when date changes
+document.getElementById("dateInput").addEventListener("change", setMinTime);
+</script>
+
+<h3>Pay ₹100 Advance</h3>
+
+<img src="/static/qr.jpeg" style="width:200px; margin-top:10px;">
+
+<p><b>UPI ID:</b> 9980156144@fam</p>
+
+<p style="color:red;">Pay and upload screenshot below</p>
+
+<input type="file" name="screenshot" required>
+
+<button style="background:#16a34a; font-weight:bold;">Confirm Payment</button>
+<h3>Secure Booking</h3>
+
+</form>
+</div>
+
+<div class="right">
+<h3>Instructions</h3>
+<p>Select time at least 1 hour later</p>
+</div>
+
+</div>
+
+</body>
+</html>

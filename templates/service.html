@@ -1,0 +1,32 @@
+<h2>{{ service.title() }}</h2>
+<body style="background:#f3f4f6;">
+<form action="/checkout" method="POST">
+
+{% if service == "cleaning" %}
+<select name="option">
+<option>1 RK - ₹200</option>
+<option>1 BHK - ₹300</option>
+<option>2 BHK - ₹400</option>
+<option>3 BHK - ₹500</option>
+</select>
+
+{% elif service == "cooking" %}
+<select name="option">
+<option>1–4 people - ₹300</option>
+<option>5–8 people - ₹400</option>
+</select>
+
+{% elif service == "party" %}
+<select name="option">
+<option>Up to 10 people - ₹700</option>
+<option>Up to 20 people - ₹1200</option>
+<option>More than 20 - Custom</option>
+</select>
+{% endif %}
+
+<br><br>
+
+<button type="submit">Buy Now</button>
+
+</form>
+</body>

@@ -1,0 +1,35 @@
+<!-- ignore jinja syntax-->
+<h2>Admin Panel</h2>
+<body style="background:#f3f4f6;">
+{% for b in bookings %}
+<div style="border:1px solid #ccc; margin:10px; padding:10px; border-radius:10px;">
+
+<p><b>Name:</b> {{b.name}}</p>
+<p><b>Phone:</b> {{b.phone}}</p>
+<p><b>Service:</b> {{b.option}}</p>
+<p><b>Address:</b> {{b.address}}</p>
+<p><b>Date:</b> {{b.date}} | {{b.time}}</p>
+
+<p>
+<b>Status:</b> 
+<span style="color:{% if b.status == 'Done' %}green{% else %}red{% endif %}; font-weight:bold;">
+{{b.status}}
+</span>
+</p>
+
+<img src="/uploads/{{b.image}}" width="120"><br><br>
+
+<a href="/update-status/{{loop.index0}}">
+<button style="background:green;color:white;padding:6px;border:none;border-radius:5px;">
+Toggle Status
+</button>
+</a>
+
+<a href="/delete/{{loop.index0}}">
+<button style="background:red;color:white;padding:6px;border:none;border-radius:5px;">
+Delete
+</button>
+</a>
+
+</div>
+{% endfor %}

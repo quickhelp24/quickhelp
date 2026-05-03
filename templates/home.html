@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+body {
+  font-family: Arial;
+  margin: 0;
+  background: #f3f4f6;
+}
+
+/* HEADER */
+.header {
+  background: #111827;
+  color: white;
+  padding: 15px;
+  text-align: center;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+/* CONTAINER */
+.container {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  padding: 20px;
+  flex-wrap: wrap;
+}
+
+/* CARD */
+.card {
+  background: white;
+  border-radius: 12px;
+  width: 250px;
+  padding: 15px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+.card img {
+  width: 100%;
+  border-radius: 10px;
+}
+
+/* BUTTON */
+button {
+  margin-top: 10px;
+  padding: 10px;
+  width: 80%;
+  background: #16a34a;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+}
+.bot {
+  background:#f3f4f6;
+  padding:8px;
+  border-radius:8px;
+  max-width:70%;
+  align-self:flex-start;
+}
+
+.user {
+  background:#16a34a;
+  color:white;
+  padding:8px;
+  border-radius:8px;
+  max-width:70%;
+  align-self:flex-end;
+}
+</style>
+</head>
+
+<body style="background:#f3f4f6;">
+  <div style="text-align:left; margin:30px;">
+  <img src="/static/logoo.jpeg" height="150">
+</div>
+
+<h1>QuickHelp</h1>
+<div class="header">QuickHelp</div>
+<div class="container">
+
+<div class="card">
+<img src="/static/cleaning.jpeg">
+<h3>House Cleaning</h3>
+<form action="/service/cleaning" method="GET">
+<button type="submit">View</button>
+</form>
+</div>
+
+<div class="card">
+<img src="/static/cooking.jpeg">
+<h3>Home Cooking</h3>
+<form action="/service/cooking" method="GET">
+<button type="submit">View</button>
+</form>
+</div>
+
+<div class="card">
+<img src="/static/party.jpeg">
+<h3>Party Cooking</h3>
+<form action="/service/party" method="GET">
+<button type="submit">View</button>
+</form>
+</div>
+<div style="text-align:center; margin:20px;">
+<p style="color:green; font-weight:bold;">
+✔ Trusted local service  
+✔ Fast response  
+✔ Affordable pricing  
+</p>
+</div>
+
+<!-- FLOATING BUTTON -->
+<div onclick="toggleChat()" style="
+position: fixed;
+bottom: 20px;
+right: 20px;
+background:#16a34a;
+color:white;
+width:60px;
+height:60px;
+border-radius:50%;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:24px;
+cursor:pointer;
+box-shadow:0 4px 10px rgba(0,0,0,0.3);
+z-index:1000;
+">
+💬
+</div>
+
+<!-- CHAT BOX -->
+<div id="chatContainer" style="
+display:none;
+position: fixed;
+bottom: 90px;
+right: 20px;
+width:300px;
+background:white;
+border-radius:12px;
+box-shadow:0 4px 12px rgba(0,0,0,0.2);
+overflow:hidden;
+font-family:Arial;
+z-index:1000;
+">
+
+<!-- HEADER -->
+<div style="background:#111827; color:white; padding:10px;">
+QuickHelp AI 🤖
+</div>
+
+<!-- MESSAGES -->
+<div id="chatMessages" style="
+height:250px;
+padding:10px;
+overflow-y:auto;
+display:flex;
+flex-direction:column;
+gap:8px;
+font-size:14px;
+">
+<div class="bot">Hi 👋 Ask me anything</div>
+</div>
+
+<!-- INPUT -->
+<div style="display:flex; border-top:1px solid #ccc;">
+<input id="userInput" type="text" placeholder="Ask..."
+style="flex:1; padding:10px; border:none; outline:none;">
+<button onclick="sendMessage()" style="
+background:#16a34a;
+color:white;
+border:none;
+padding:10px;
+">Send</button>
+</div>
+<!-- 👇 CHAT UI (STEP 4) -->
+
+
+<!-- 👇 JS (STEP 3) -->
+<script> code </script>
+
+</body>
+</html>
+</div>
+
+<script>
+function toggleChat() {
+  const chat = document.getElementById("chatContainer");
+  chat.style.display = chat.style.display === "none" ? "block" : "none";
+}
+
+function sendMessage() {
+    const input = document.getElementById("userInput");
+    const msg = input.value.toLowerCase();
+    const chat = document.getElementById("chatMessages");
+
+    if(msg === "") return;
+
+    chat.innerHTML += `<div class="user">${msg}</div>`;
+
+    let reply = "";
+
+    if(msg.includes("price")) {
+        reply = "Cleaning starts from ₹200, cooking from ₹300.";
+    }
+    else if(msg.includes("book")) {
+        reply = "Select service → Buy Now → Fill details → Pay ₹100.";
+    }
+    else if(msg.includes("contact")) {
+        reply = "Contact 9980156144.";
+    }
+    else {
+        reply = "Ask about price, booking or contact 😊";
+    }
+
+    chat.innerHTML += `<div class="bot">${reply}</div>`;
+
+    input.value = "";
+    chat.scrollTop = chat.scrollHeight;
+}
+</script>
+
+</div>
+</body>
+</html>
