@@ -53,8 +53,8 @@ def submit():
         "date": date_input,
         "time": time_input,
         "image": filename,
-        "status": "Pending"
-    })
+        "status": "Pending",
+        "assigned_to": "" })
 
     # Telegram notification
     message = f"""
@@ -98,6 +98,15 @@ def update_status(index):
         bookings[index]["status"] = "Done"
     else:
         bookings[index]["status"] = "Pending"
+    return redirect('/admin')
+@app.route('/update/<int:index>', methods=['POST'])
+def update(index):
+    worker = request.form['worker']
+    status = request.form['status']
+
+    bookings[index]['assigned_to'] = worker
+    bookings[index]['status'] = status
+
     return redirect('/admin')
 
 

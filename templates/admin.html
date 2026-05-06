@@ -3,6 +3,22 @@
 <h2>Admin Panel</h2>
 <body style="background:#f3f4f6;">
 {% for b in bookings %}
+<p><b>Assigned To:</b> {{b.assigned_to}}</p>
+<form action="/update/{{loop.index0}}" method="POST">
+
+    <input type="text" name="worker"
+    placeholder="Worker name"
+    value="{{b.assigned_to}}">
+
+    <select name="status">
+        <option value="Pending">Pending</option>
+        <option value="Assigned">Assigned</option>
+        <option value="Completed">Completed</option>
+    </select>
+
+    <button>Update</button>
+
+</form>
 <div style="border:1px solid #ccc; margin:10px; padding:10px; border-radius:10px;">
 
 <p><b>Name:</b> {{b.name}}</p>
@@ -20,11 +36,7 @@
 
 <img src="/uploads/{{b.image}}" width="120"><br><br>
 
-<a href="/update-status/{{loop.index0}}">
-<button style="background:green;color:white;padding:6px;border:none;border-radius:5px;">
-Toggle Status
-</button>
-</a>
+
 
 <a href="/delete/{{loop.index0}}">
 <button style="background:red;color:white;padding:6px;border:none;border-radius:5px;">
