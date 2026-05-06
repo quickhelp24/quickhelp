@@ -1,57 +1,32 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, session, send_from_directory
 import os
 import requests
-import sqlite3
+BOT_TOKEN="8639649764:AAGw4uJVFLefIlLjUPQGj3-YqmjJF5uSJnY"
+CHAT_ID= "6611289600"
+from datetime import datetime, timedelta 
+
+
 
 app = Flask(__name__)
+app.secret_key = "secret123"
 
 UPLOAD_FOLDER = 'uploads'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
-BOT_TOKEN = "YOUR_BOT_TOKEN"
-CHAT_ID = "YOUR_CHAT_ID"
-
-
-def get_db():
-    conn = sqlite3.connect('database.db')
-    conn.row_factory = sqlite3.Row
-    return conn
-
-
-# Create table
-conn = get_db()
-conn.execute('''
-CREATE TABLE IF NOT EXISTS bookings (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT,
-    phone TEXT,
-    option TEXT,
-    address TEXT,
-    date TEXT,
-    time TEXT,
-    image TEXT,
-    status TEXT,
-    assigned_to TEXT
-)
-''')
-conn.commit()
-conn.close()
-
+bookings = []
 
 @app.route('/')
 def home():
     return render_template('home.html')
 
+@app.route('/service/<service>')
+def service(service):
+    return render_template('service.html', service=service)
 
-@app.route('/service/<option>')
-def service(option):
-    return render_template('service.html', option=option)
-
-
-@app.route('/checkout/<option>')
-def checkout(option):
+@app.route('/checkout', methods=['POST'])
+def checkout():
+    option = request.form['option']
     return render_template('checkout.html', option=option)
-
 
 @app.route('/submit', methods=['POST'])
 def submit():
@@ -66,30 +41,20 @@ def submit():
 
     if file and file.filename != "":
         filename = file.filename
-        file.save(os.path.join(UPLOAD_FOLDER, filename))
+        file.save("uploads/" + filename)
     else:
         filename = ""
 
-    conn = get_db()
-
-    conn.execute('''
-    INSERT INTO bookings
-    (name, phone, option, address, date, time, image, status, assigned_to)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-    ''', (
-        name,
-        phone,
-        option,
-        address,
-        date_input,
-        time_input,
-        filename,
-        "Pending",
-        ""
-    ))
-
-    conn.commit()
-    conn.close()
+    bookings.append({
+        "name": name,
+        "phone": phone,
+        "option": option,
+        "address": address,
+        "date": date_input,
+        "time": time_input,
+        "image": filename,
+        "status": "Pending",
+        "assigned_to": "" })
 
     # Telegram notification
     message = f"""
@@ -109,52 +74,46 @@ Time: {time_input}
     })
 
     return render_template('success.html')
-
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        if request.form['password'] == "puni@2011":
+            session['admin'] = True
+            return redirect('/admin')
+        return "Wrong password"
+    return render_template('login.html')
 
 @app.route('/admin')
 def admin():
-    conn = get_db()
-    bookings = conn.execute('SELECT * FROM bookings ORDER BY id DESC').fetchall()
-    conn.close()
-
+    if not session.get('admin'):
+        return redirect('/login')
     return render_template('admin.html', bookings=bookings)
 
-
+@app.route('/uploads/<filename>')
+def uploaded_file(filename):
+    return send_from_directory(UPLOAD_FOLDER, filename)
+@app.route('/update-status/<int:index>')
+def update_status(index):
+    if bookings[index]["status"] == "Pending":
+        bookings[index]["status"] = "Done"
+    else:
+        bookings[index]["status"] = "Pending"
+    return redirect('/admin')
 @app.route('/update/<int:index>', methods=['POST'])
 def update(index):
     worker = request.form['worker']
     status = request.form['status']
 
-    conn = get_db()
-
-    conn.execute('''
-    UPDATE bookings
-    SET assigned_to = ?, status = ?
-    WHERE id = ?
-    ''', (worker, status, index))
-
-    conn.commit()
-    conn.close()
+    bookings[index]['assigned_to'] = worker
+    bookings[index]['status'] = status
 
     return redirect('/admin')
 
 
 @app.route('/delete/<int:index>')
 def delete(index):
-    conn = get_db()
-
-    conn.execute('DELETE FROM bookings WHERE id = ?', (index,))
-
-    conn.commit()
-    conn.close()
-
+    bookings.pop(index)
     return redirect('/admin')
-
-
-@app.route('/uploads/<filename>')
-def uploaded_file(filename):
-    return redirect(f'/uploads/{filename}')
-
 
 if __name__ == '__main__':
     app.run(debug=True)
