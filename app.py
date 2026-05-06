@@ -4,7 +4,31 @@ import requests
 BOT_TOKEN="8639649764:AAGw4uJVFLefIlLjUPQGj3-YqmjJF5uSJnY"
 CHAT_ID= "6611289600"
 from datetime import datetime, timedelta 
+import sqlite3
+def get_db():
+    conn = sqlite3.connect('database.db')
+    conn.row_factory = sqlite3.Row
+    return conn
 
+conn = get_db()
+
+conn.execute('''
+CREATE TABLE IF NOT EXISTS bookings (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT,
+    phone TEXT,
+    option TEXT,
+    address TEXT,
+    date TEXT,
+    time TEXT,
+    image TEXT,
+    status TEXT,
+    assigned_to TEXT
+)
+''')
+
+conn.commit()
+conn.close()
 
 
 app = Flask(__name__)
