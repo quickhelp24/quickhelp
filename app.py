@@ -61,13 +61,6 @@ def submit():
     date_input = request.form['date']
     time_input = request.form['time']
 
-    file = request.files.get('image')
-
-    if file and file.filename != "":
-        filename = file.filename
-        file.save("uploads/" + filename)
-    else:
-        filename = ""
 
     bookings.append({
         "name": name,
@@ -76,7 +69,6 @@ def submit():
         "address": address,
         "date": date_input,
         "time": time_input,
-        "image": filename,
         "status": "Pending",
         "assigned_to": "" })
 
