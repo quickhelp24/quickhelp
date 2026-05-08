@@ -139,5 +139,21 @@ def delete(index):
     bookings.pop(index)
     return redirect('/admin')
 
+@app.route('/privacy')
+def privacy():
+    return render_template('privacy.html')
+
+@app.route('/terms')
+def terms():
+    return render_template('terms.html')
+
+@app.route('/service-agreement')
+def service_agreement():
+    return render_template('service_agreement.html')
+
+@app.route('/important-rules')
+def important_rules():
+    return render_template('important_rules.html')
+
 if __name__ == '__main__':
     app.run(debug=True)
