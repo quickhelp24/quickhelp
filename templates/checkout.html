@@ -47,26 +47,28 @@ document.getElementById("dateInput").setAttribute("min", today);
 <label>Time</label>
 <input type="time" name="time" id="timeInput" min="07:00" max="20:00" required>
 <script>
-function setMinTime() {
-    const timeInput = document.getElementById("timeInput");
-    const dateInput = document.getElementById("dateInput");
+
+const dateInput = document.getElementById("date");
+const timeInput = document.getElementById("time");
+
+timeInput.addEventListener("input", () => {
+    const selectedDate = dateInput.value;
+    const selectedTime = timeInput.value;
 
     const now = new Date();
-    const selectedDate = dateInput.value;
-    const today = new Date().toISOString().split('T')[0];
+
+    const today = now.toISOString().split("T")[0];
 
     if (selectedDate === today) {
-        // Add 1 hour
-        now.setHours(now.getHours() + 1);
+        const currentTime = now.toTimeString().slice(0,5);
 
-        let hours = String(now.getHours()).padStart(2, '0');
-        let minutes = String(now.getMinutes()).padStart(2, '0');
-
-        timeInput.min = hours + ":" + minutes;
-    } else {
-        timeInput.min = "06:00";
+        if (selectedTime < currentTime) {
+            alert("Please select a future time.");
+            timeInput.value = "";
+        }
     }
-}
+});
+
 
 // run when date changes
 document.getElementById("dateInput").addEventListener("change", setMinTime);
