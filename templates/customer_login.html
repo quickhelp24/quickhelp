@@ -1,0 +1,112 @@
+<!doctype html>
+<html>
+
+<head>
+
+<title>quickhelp24 customer login</title>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+
+</head>
+
+<body>
+
+<h2>customer login</h2>
+
+<input type="text"
+id="phone"
+placeholder="+91xxxxxxxxxx">
+
+<div id="recaptcha-container"></div>
+
+<button onclick="sendotp()">
+send otp
+</button>
+
+<br><br>
+
+<input type="text"
+id="otp"
+placeholder="enter otp">
+
+<button onclick="verifyotp()">
+verify otp
+</button>
+
+<script>
+
+const firebaseConfig = {
+    apiKey: "AIzaSyBYa4TPpY9KUN-3-ro40zBpyCE1Ctj1Bis",
+    authDomain: "quickhelp24-932f6.firebaseapp.com",
+    projectId: "quickhelp24-932f6",
+    storageBucket: "quickhelp24-932f6.firebasestorage.app",
+    messagingSenderId: "713052455810",
+    appId: "1:713052455810:web:24708c7f4ac1918414859b",
+    
+  };
+
+firebase.initializeapp(firebaseconfig);
+
+window.recaptchaverifier =
+new firebase.auth.recaptchaverifier(
+'recaptcha-container'
+);
+
+function sendotp(){
+
+const phone =
+document.getelementbyid("phone").value;
+
+firebase.auth()
+.signinwithphonenumber(
+phone,
+window.recaptchaverifier
+)
+
+.then(function(confirmationresult){
+
+window.confirmationresult =
+confirmationresult;
+
+alert("otp sent");
+
+})
+
+.catch(function(error){
+
+alert(error.message);
+
+});
+
+}
+
+function verifyotp(){
+
+const otp =
+document.getelementbyid("otp").value;
+
+confirmationresult.confirm(otp)
+
+.then(function(result){
+
+alert("login successful");
+
+window.location.href="/";
+
+})
+
+.catch(function(error){
+
+alert("invalid otp");
+
+});
+
+}
+
+</script>
+
+</body>
+
+</html>
