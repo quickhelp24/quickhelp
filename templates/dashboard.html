@@ -1,0 +1,28 @@
+<h2>
+
+My Bookings
+
+</h2>
+
+
+{% for b in bookings %}
+
+<div>
+
+{{b.option}}
+
+<br>
+
+{{b.date}}
+
+<br>
+
+Status:
+
+{{b.status}}
+
+</div>
+
+<hr>
+
+{% endfor %}

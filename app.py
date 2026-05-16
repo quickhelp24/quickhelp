@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, redirect, session, send_from_directory
+from flask import session
 import os
 import requests
 BOT_TOKEN="8639649764:AAGw4uJVFLefIlLjUPQGj3-YqmjJF5uSJnY"
@@ -14,18 +15,48 @@ conn = get_db()
 
 conn.execute('''
 CREATE TABLE IF NOT EXISTS bookings (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT,
-    phone TEXT,
-    option TEXT,
-    address TEXT,
-    date TEXT,
-    time TEXT,
-    image TEXT,
-    status TEXT,
-    assigned_to TEXT
+
+id INTEGER PRIMARY KEY AUTOINCREMENT,
+
+name TEXT,
+
+phone TEXT,
+
+option TEXT,
+
+address TEXT,
+
+date TEXT,
+
+time TEXT,
+
+image TEXT,
+
+status TEXT,
+
+assigned_to TEXT
+
 )
+
 ''')
+
+
+conn.execute('''
+
+CREATE TABLE IF NOT EXISTS users(
+
+id INTEGER PRIMARY KEY AUTOINCREMENT,
+
+phone TEXT UNIQUE,
+
+name TEXT,
+
+address TEXT
+
+)
+
+''')
+
 
 conn.commit()
 conn.close()
@@ -91,9 +122,8 @@ Time: {time_input}
 
     return render_template('success.html')
 
-@app.route('/customer-login')
-def customer_login():
-    return render_template('customer_login.html')
+    
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -152,6 +182,73 @@ def service_agreement():
 def important_rules():
     return render_template('important_rules.html')
 
+@app.route('/dashboard')
+def dashboard():
+    phone = session.get("phone")
+    conn = get_db()
+    bookings = conn.execute(
+        '''
+        SELECT *
+        FROM bookings
+        WHERE phone=?   
+        ''',
+        (phone,)
+    ).fetchall()
+    conn.close()
+    return render_template('dashboard.html', bookings=bookings)
 
+@app.route('/profile')
+def profile():
+
+    if "phone" not in session:
+        return redirect('/customer-login')
+
+    conn = get_db()
+
+    user = conn.execute(
+        '''
+        SELECT *
+        FROM users
+        WHERE phone=?
+        ''',
+        (session["phone"],)
+    ).fetchone()
+
+    return render_template(
+        'profile.html',
+        user=user
+    )
+@app.route('/customer-login', methods=['GET', 'POST'])
+def customer_login():
+
+    if request.method == "POST":
+
+        name = request.form['name']
+        phone = request.form['phone']
+        address = request.form['address']
+
+        conn = get_db()
+
+        conn.execute(
+            '''
+            INSERT OR REPLACE INTO users
+            (phone, name, address)
+
+            VALUES (?, ?, ?)
+            ''',
+
+            (phone, name, address)
+
+        )
+
+        conn.commit()
+
+        session["phone"] = phone
+
+        return redirect('/profile')
+
+    return render_template(
+        'customer_login.html'
+    )
 if __name__ == '__main__':
     app.run(debug=True)
