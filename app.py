@@ -90,6 +90,11 @@ Time: {time_input}
     })
 
     return render_template('success.html')
+
+@app.route('/customer-login')
+def customer_login():
+    return render_template('customer_login.html')
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -147,9 +152,6 @@ def service_agreement():
 def important_rules():
     return render_template('important_rules.html')
 
-@app.route('/customer_login.html')
-def customer_login():
-    return render_template('customer_login.html')
 
 if __name__ == '__main__':
     app.run(debug=True)

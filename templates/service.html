@@ -1,32 +1,454 @@
-<h2>{{ service.title() }}</h2>
-<body style="background:#f3f4f6;">
-<form action="/checkout" method="POST">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-{% if service == "cleaning" %}
-<select name="option">
-<option>1 RK - ₹200</option>
-<option>1 BHK - ₹300</option>
-<option>2 BHK - ₹400</option>
-<option>3 BHK - ₹500</option>
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta
+name="viewport"
+content="
+width=device-width,
+initial-scale=1.0">
+
+<style>
+
+body{
+
+font-family:
+Poppins,sans-serif;
+
+background:
+
+linear-gradient(
+135deg,
+#f8f8f8,
+#ffffff
+);
+
+padding:20px;
+
+}
+
+
+.container{
+
+max-width:
+600px;
+
+margin:auto;
+
+background:
+white;
+
+padding:25px;
+
+border-radius:
+25px;
+
+box-shadow:
+
+0 10px 30px rgba(
+0,
+0,
+0,
+0.08
+);
+
+}
+
+
+h2{
+
+text-align:center;
+
+font-size:
+32px;
+
+color:
+#111827;
+
+}
+
+
+select{
+
+width:100%;
+
+padding:
+15px;
+
+border-radius:
+12px;
+
+border:
+1px solid #ddd;
+
+margin-top:
+20px;
+
+}
+
+
+button{
+
+width:
+100%;
+
+padding:
+15px;
+
+margin-top:
+20px;
+
+border:none;
+
+border-radius:
+12px;
+
+background:
+
+linear-gradient(
+90deg,
+#D4AF37,
+#b88a00
+);
+
+color:
+white;
+
+font-size:
+18px;
+
+font-weight:
+bold;
+
+}
+
+
+.rules{
+
+margin-top:
+25px;
+
+background:
+#fff8e1;
+
+padding:
+20px;
+
+border-radius:
+18px;
+
+}
+
+
+.tools{
+
+font-size:
+30px;
+
+text-align:
+center;
+
+margin:
+20px;
+
+}
+
+</style>
+
+</head>
+
+
+
+<body>
+
+<div class="container">
+
+
+<h2>
+
+{{service.title()}}
+
+</h2>
+
+
+
+{% if service=="cleaning" %}
+
+
+
+<div class="tools">
+
+🧹 🪣 🧽
+
+</div>
+
+
+
+<select
+name="option"
+
+form="bookingForm">
+
+<option>
+
+1 RK
+
+₹200
+
+</option>
+
+
+<option>
+
+1 BHK
+
+₹300
+
+</option>
+
+
+<option>
+
+2 BHK
+
+₹400
+
+</option>
+
+
+<option>
+
+3 BHK
+
+₹500
+
+</option>
+
 </select>
 
-{% elif service == "cooking" %}
-<select name="option">
-<option>1–4 people - ₹300</option>
-<option>5–8 people - ₹400</option>
-</select>
 
-{% elif service == "party" %}
-<select name="option">
-<option>Up to 10 people - ₹700</option>
-<option>Up to 20 people - ₹1200</option>
-<option>More than 20 - Custom</option>
-</select>
-{% endif %}
+
+<div class="rules">
+
+
+<h3>
+
+House Cleaning Rules
+
+</h3>
+
+
+<p>
+
+✔ Includes sweeping
 
 <br><br>
 
-<button type="submit">Buy Now</button>
+✔ Includes mopping
+
+<br><br>
+
+✔ Basic arranging included
+
+<br><br>
+
+❌ Utensils cleaning extra
+
+<br><br>
+
+❌ Clothes washing extra
+
+<br><br>
+
+⚠ Extra work extra charge
+
+</p>
+
+
+</div>
+
+
+
+{% elif service=="cooking" %}
+
+
+
+<div class="tools">
+
+🍳 🔪 🥘
+
+</div>
+
+
+
+<select
+name="option"
+
+form="bookingForm">
+
+<option>
+
+1–4 people
+
+₹300
+
+</option>
+
+
+
+<option>
+
+5–8 people
+
+₹400
+
+</option>
+
+</select>
+
+
+
+<div class="rules">
+
+
+<h3>
+
+Cooking Rules
+
+</h3>
+
+
+<p>
+
+✔ Includes cooking
+
+<br><br>
+
+✔ Utensils cleaning included
+
+<br><br>
+
+✔ 1 meal =
+3–4 dishes
+
+<br><br>
+
+⚠ Extra items extra charge
+
+</p>
+
+
+</div>
+
+
+
+{% elif service=="party" %}
+
+
+
+<div class="tools">
+
+🎉 🍲 👨‍🍳
+
+</div>
+
+
+
+<select
+name="option"
+
+form="bookingForm">
+
+<option>
+
+10 people
+
+₹700
+
+</option>
+
+
+
+<option>
+
+20 people
+
+₹1200
+
+</option>
+
+
+
+<option>
+
+Custom
+
+</option>
+
+</select>
+
+
+
+<div class="rules">
+
+
+<h3>
+
+Party Cooking Rules
+
+</h3>
+
+
+<p>
+
+✔ Small gatherings
+
+<br><br>
+
+✔ Family events
+
+<br><br>
+
+⚠ Grocery cost separate
+
+<br><br>
+
+⚠ Final cost depends on menu
+
+</p>
+
+
+</div>
+
+
+
+{% endif %}
+
+
+
+<form
+
+id="bookingForm"
+
+action="/checkout"
+
+method="POST">
+
+
+<button
+type="submit">
+
+Continue →
+
+</button>
+
 
 </form>
+
+
+
+</div>
+
 </body>
+
+</html>

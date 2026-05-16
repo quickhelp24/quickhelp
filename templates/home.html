@@ -4,73 +4,245 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="QuickHelp24 provides house cleaning, cooking help and home services in Chitradurga.">
 <style>
-body {
-  font-family: Arial;
-  margin: 0;
-  background: #f3f4f6;
+
+body{
+font-family:Poppins,sans-serif;
+margin:0;
+
+background:
+linear-gradient(
+135deg,
+#f8f8f8,
+#ffffff,
+#ececec
+);
+
+color:#222;
 }
 
 /* HEADER */
-.header {
-  background: #111827;
-  color: white;
-  padding: 15px;
-  text-align: center;
-  font-size: 20px;
-  font-weight: bold;
+
+.header{
+
+background:
+linear-gradient(
+90deg,
+#111827,
+#1f2937
+);
+
+padding:18px;
+
+font-size:24px;
+
+font-weight:bold;
+
+color:#D4AF37;
+
+text-align:center;
+
+box-shadow:
+0 4px 15px rgba(0,0,0,.1);
+
 }
+
 
 /* CONTAINER */
-.container {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  padding: 20px;
-  flex-wrap: wrap;
+
+.container{
+
+display:flex;
+
+justify-content:center;
+
+gap:25px;
+
+padding:25px;
+
+flex-wrap:wrap;
+
 }
+
 
 /* CARD */
-.card {
-  background: white;
-  border-radius: 12px;
-  width: 250px;
-  padding: 15px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-  text-align: center;
+
+.card{
+
+background:white;
+
+border-radius:20px;
+
+width:270px;
+
+padding:18px;
+
+box-shadow:
+
+0 10px 30px rgba(
+0,
+0,
+0,
+0.08
+);
+
+transition:.3s;
+
+text-align:center;
+
 }
 
-.card img {
-  width: 100%;
-  border-radius: 10px;
+
+.card:hover{
+
+transform:
+translateY(-8px);
+
 }
+
+
+.card img{
+
+width:100%;
+
+height:180px;
+
+object-fit:cover;
+
+border-radius:14px;
+
+}
+
 
 /* BUTTON */
-button {
-  margin-top: 10px;
-  padding: 10px;
-  width: 80%;
-  background: #16a34a;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-weight: bold;
-}
-.bot {
-  background:#f3f4f6;
-  padding:8px;
-  border-radius:8px;
-  max-width:70%;
-  align-self:flex-start;
+
+button{
+
+padding:12px;
+
+width:85%;
+
+background:
+
+linear-gradient(
+90deg,
+#D4AF37,
+#b88a00
+);
+
+border:none;
+
+border-radius:12px;
+
+color:white;
+
+font-weight:bold;
+
+cursor:pointer;
+
+transition:.3s;
+
 }
 
-.user {
-  background:#16a34a;
-  color:white;
-  padding:8px;
-  border-radius:8px;
-  max-width:70%;
-  align-self:flex-end;
+
+button:hover{
+
+transform:
+scale(
+1.05
+);
+
 }
+
+
+/* CHAT */
+
+.bot{
+
+background:
+#f5f5f5;
+
+padding:10px;
+
+border-radius:12px;
+
+max-width:75%;
+
+}
+
+
+.user{
+
+background:
+#D4AF37;
+
+padding:10px;
+
+border-radius:12px;
+
+color:white;
+
+max-width:75%;
+
+align-self:flex-end;
+
+}
+
+
+.insta{
+
+position:fixed;
+
+right:20px;
+
+bottom:160px;
+
+width:55px;
+
+height:55px;
+
+border-radius:50%;
+
+background:white;
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+z-index:999;
+
+}
+
+
+
+.whatsapp{
+
+position:fixed;
+
+right:20px;
+
+bottom:90px;
+
+width:55px;
+
+height:55px;
+
+border-radius:50%;
+
+background:white;
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+z-index:999;
+
+}
+
+
 </style>
 </head>
 
@@ -79,14 +251,37 @@ button {
   <img src="/static/logoooooo.jpeg" height="150">
 </div>
 
-<h1>QuickHelp24 <br> House Cleaning & Home Services in Chitradurga</h1>
-<div class="header">QuickHelp24</div>
-<div class="container">
-  <div style="background:#fff3cd; color:#000; padding:15px; border-radius:10px; margin:15px; font-family:sans-serif;">
-    <a href="/customer_login">
-Customer Login
-</a>
+<h1 style="
+text-align:center;
 
+font-size:42px;
+
+margin-top:10px;
+
+">
+
+QuickHelp24
+
+</h1>
+
+
+
+<p style="
+
+text-align:center;
+
+font-size:18px;
+
+color:#555;
+
+">
+
+Premium Home Services
+
+in Chitradurga
+
+</p>
+#hiringgg
 <h3>🚀 Hiring Workers</h3>
 
 <p><b>Dear Customers,</b><br>
@@ -144,6 +339,38 @@ Website explore ಮಾಡಿ check ಮಾಡಬಹುದು.
 ✔ Affordable pricing  
 </p>
 </div>
+<a
+href="https://instagram.com/quickhelp24_"
+target="_blank"
+class="insta">
+
+<img
+src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png"
+
+width="30">
+
+</a>
+
+
+
+<a
+
+href="
+https://wa.me/
+919945783602"
+
+target="_blank"
+
+class="whatsapp">
+
+<img
+
+src="
+https://cdn-icons-png.flaticon.com/512/733/733585.png"
+
+width="30">
+
+</a>
 
 
 <!-- FLOATING BUTTON -->

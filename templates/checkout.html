@@ -3,21 +3,91 @@
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
-.container { display: flex; gap: 30px; flex-wrap: wrap; }
-.left { flex: 2; }
-.right { flex: 1; background: #f0fdf4; padding: 15px; border-radius: 10px; }
 
-input, button {
-  width: 100%;
-  padding: 10px;
-  margin-top: 8px;
+.container{
+
+display:flex;
+
+gap:30px;
+
+flex-wrap:wrap;
+
 }
 
-button {
-  background: green;
-  color: white;
-  border: none;
+
+.left{
+
+flex:2;
+
+background:white;
+
+padding:25px;
+
+border-radius:20px;
+
+box-shadow:
+0 8px 20px rgba(
+0,
+0,
+0,
+0.08
+);
+
 }
+
+
+.right{
+
+flex:1;
+
+background:
+#fff8e1;
+
+padding:20px;
+
+border-radius:20px;
+
+}
+
+
+input,
+button{
+
+width:100%;
+
+box-sizing:
+border-box;
+
+padding:14px;
+
+margin-top:10px;
+
+border-radius:12px;
+
+border:
+1px solid #ddd;
+
+}
+
+
+button{
+
+background:
+
+linear-gradient(
+90deg,
+#D4AF37,
+#b88a00
+);
+
+color:white;
+
+border:none;
+
+font-weight:bold;
+
+}
+
 </style>
 </head>
 
@@ -33,48 +103,63 @@ button {
 <input type="hidden" name="option" value="{{option}}">
 
 <input type="text" name="name" placeholder="Name" required>
-<input type="text" name="phone" placeholder="Phone" required>
+<input type="tel" name="phone" placeholder="Phone" pattern="[0-9]{10}" minlength="10" maxlength="10" inputmode="numeric" required>
 <input type="text" name="address" placeholder="Address" required>
 
 
 <label>Date</label>
-<input type="date" name="date" id="dateInput" required>
+<input type="date" name="date" id="dateInput" min="" required>
 <script>
-const today = new Date().toISOString().split('T')[0];
-document.getElementById("dateInput").setAttribute("min", today);
+document.getElementById("dateInput").min =
+new Date().toISOString().split("T")[0];
 </script>
 
 <label>Time</label>
-<input type="time" name="time" id="timeInput" min="07:00" max="20:00" required>
+<input type="time" name="time" id="timeInput" min="07:00" max="21:00" required>
+
 <script>
 
-const dateInput = document.getElementById("date");
-const timeInput = document.getElementById("time");
+var dateInput =
+document.getElementById("dateInput");
 
-timeInput.addEventListener("input", () => {
-    const selectedDate = dateInput.value;
-    const selectedTime = timeInput.value;
+var timeInput =
+document.getElementById("timeInput");
 
-    const now = new Date();
+timeInput.addEventListener(
+"change",
 
-    const today = now.toISOString().split("T")[0];
+function(){
 
-    if (selectedDate === today) {
-        const currentTime = now.toTimeString().slice(0,5);
+var now =
+new Date();
 
-        if (selectedTime < currentTime) {
-            alert("Please select a future time.");
-            timeInput.value = "";
-        }
-    }
+var today =
+now.toISOString().split("T")[0];
+
+var currentTime =
+now.getHours().toString().padStart(2,'0')
++
+":"
++
+now.getMinutes().toString().padStart(2,'0');
+
+if(
+dateInput.value === today
+&&
+timeInput.value < currentTime
+){
+
+alert(
+"Please select future time"
+);
+
+timeInput.value = "";
+
+}
+
 });
 
-
-// run when date changes
-document.getElementById("dateInput").addEventListener("change", setMinTime);
 </script>
-
-
 <button style="background:#16a34a; font-weight:bold;">Confirm Booking</button>
 
 
