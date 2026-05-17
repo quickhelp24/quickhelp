@@ -94,42 +94,111 @@ def checkout():
 
 @app.route('/submit', methods=['POST'])
 def submit():
-    name = request.form['name']
-    phone = request.form['phone']
+
+    if "phone" not in session:
+        return redirect('/customer-login')
+
+
+    conn = get_db()
+
+    user = conn.execute(
+
+        '''
+
+        SELECT *
+
+        FROM users
+
+        WHERE phone=?
+
+        ''',
+
+        (session["phone"],)
+
+    ).fetchone()
+
+
+    name = user["name"]
+
+    phone = user["phone"]
+
+    address = user["address"]
+
+
     option = request.form['option']
-    address = request.form['address']
+
     date_input = request.form['date']
+
     time_input = request.form['time']
 
 
     bookings.append({
-        "name": name,
-        "phone": phone,
-        "option": option,
-        "address": address,
-        "date": date_input,
-        "time": time_input,
-        "status": "Pending",
-        "assigned_to": "" })
 
-    # Telegram notification
+        "name": name,
+
+        "phone": phone,
+
+        "option": option,
+
+        "address": address,
+
+        "date": date_input,
+
+        "time": time_input,
+
+        "status": "Pending",
+
+        "assigned_to": ""
+
+    })
+
+
     message = f"""
+
 New Booking 🚀
 
 Name: {name}
-Service: {option}
-Date: {date_input}
-Time: {time_input}
+
+Phone: {phone}
+
+Address:
+{address}
+
+Service:
+{option}
+
+Date:
+{date_input}
+
+Time:
+{time_input}
+
 """
+
 
     url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
 
-    requests.post(url, data={
-        "chat_id": CHAT_ID,
-        "text": message
-    })
 
-    return render_template('success.html')
+    requests.post(
+
+        url,
+
+        data={
+
+            "chat_id":
+            CHAT_ID,
+
+            "text":
+            message
+
+        }
+
+    )
+
+
+    return render_template(
+        'success.html'
+    )
 
     
 
@@ -328,29 +397,26 @@ def history():
     if "phone" not in session:
         return redirect('/customer-login')
 
-    conn = get_db()
 
-    bookings = conn.execute(
+    user_phone = session["phone"]
 
-        '''
 
-        SELECT *
+    user_bookings = []
 
-        FROM bookings
+    for booking in bookings:
 
-        WHERE phone=?
+        if booking["phone"] == user_phone:
 
-        ''',
+            user_bookings.append(
+                booking
+            )
 
-        (session["phone"],)
-
-    ).fetchall()
 
     return render_template(
 
         'history.html',
 
-        bookings=bookings
+        bookings=user_bookings
 
     )
 
