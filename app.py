@@ -102,15 +102,10 @@ def submit():
     conn = get_db()
 
     user = conn.execute(
-
         '''
-
         SELECT *
-
         FROM users
-
         WHERE phone=?
-
         ''',
 
         (session["phone"],)
@@ -119,47 +114,95 @@ def submit():
 
 
     name = user["name"]
-
     phone = user["phone"]
-
     address = user["address"]
 
 
     option = request.form['option']
-
     date_input = request.form['date']
-
     time_input = request.form['time']
 
 
-    bookings.append({
+    conn.execute(
+        '''
 
-        "name": name,
+        INSERT INTO bookings(
 
-        "phone": phone,
+        name,
 
-        "option": option,
+        phone,
 
-        "address": address,
+        option,
 
-        "date": date_input,
+        address,
 
-        "time": time_input,
+        date,
 
-        "status": "Pending",
+        time,
 
-        "assigned_to": ""
+        status,
 
-    })
+        assigned_to
+
+        )
+
+        VALUES(
+
+        ?,
+
+        ?,
+
+        ?,
+
+        ?,
+
+        ?,
+
+        ?,
+
+        ?,
+
+        ?
+
+        )
+
+        ''',
+
+        (
+
+        name,
+
+        phone,
+
+        option,
+
+        address,
+
+        date_input,
+
+        time_input,
+
+        "Pending",
+
+        ""
+
+        )
+
+    )
+
+    conn.commit()
+
 
 
     message = f"""
 
 New Booking 🚀
 
-Name: {name}
+Name:
+{name}
 
-Phone: {phone}
+Phone:
+{phone}
 
 Address:
 {address}
@@ -199,7 +242,6 @@ Time:
     return render_template(
         'success.html'
     )
-
     
 
 
@@ -310,6 +352,10 @@ def customer_signup():
     phone = request.form['phone']
     address = request.form['address']
     pin = request.form['pin']
+    if not (
+        pin.isdigit() and len(pin) == 6
+    ):
+        return "PIN must be exactly 6 numbers"
 
     conn = get_db()
 
@@ -417,6 +463,86 @@ def history():
         'history.html',
 
         bookings=user_bookings
+
+    )
+
+@app.route('/edit-profile', methods=['GET', 'POST'])
+def edit_profile():
+
+    if "phone" not in session:
+        return redirect('/customer-login')
+
+
+    conn = get_db()
+
+
+    if request.method == "POST":
+
+        address =request.form['address']
+
+        pin =request.form['pin']
+
+
+        conn.execute(
+
+            '''
+
+            UPDATE users
+
+            SET address=?,
+            pin=?
+
+            WHERE phone=?
+
+            ''',
+
+            (
+
+            address,
+
+            pin,
+
+            session["phone"]
+
+            )
+
+        )
+
+
+        conn.commit()
+
+
+        return redirect(
+            '/profile'
+        )
+
+
+    user =conn.execute(
+
+        '''
+
+        SELECT *
+
+        FROM users
+
+        WHERE phone=?
+
+        ''',
+
+        (
+
+        session["phone"],
+
+        )
+
+    ).fetchone()
+
+
+    return render_template(
+
+        'edit_profile.html',
+
+        user=user
 
     )
 

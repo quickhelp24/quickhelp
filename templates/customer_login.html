@@ -199,7 +199,11 @@ required>
 <input
 type="password"
 name="pin"
-placeholder="Create PIN"
+placeholder="6 digit PIN"
+pattern="[0-9]{6}"
+minlength="6"
+maxlength="6"
+inputmode="numeric"
 required>
 
 
