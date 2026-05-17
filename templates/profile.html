@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html>
+
+<head>
+
 <meta
 name="viewport"
 content="width=device-width, initial-scale=1.0">
-<head>
 
 <style>
 
@@ -11,25 +13,32 @@ body{
 
 font-family:Arial;
 
-background:#f8f8f8;
+background:#f5f5f5;
 
-padding:15px;
+padding:20px;
+
+margin:0;
 
 }
 
 
+
 .box{
-
-width:90%;
-
-max-width:400px;
-
-margin:auto;
 
 background:white;
 
+padding:45px;
+
+border-radius:25px;
+
+width:90%;
+
+max-width:500px;
+
+margin:auto;
+
 box-shadow:
-0 8px 20px rgba(
+0 10px 25px rgba(
 0,
 0,
 0,
@@ -39,13 +48,93 @@ box-shadow:
 }
 
 
+
+.avatar{
+
+width:90px;
+
+height:90px;
+
+border-radius:50%;
+
+background:#D4AF37;
+
+color:white;
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+font-size:38px;
+
+font-weight:bold;
+
+margin:auto;
+
+}
+
+
+
+.center{
+
+text-align:center;
+
+margin-top:15px;
+
+margin-bottom:30px;
+
+}
+
+
+
+.item{
+
+padding:18px 12px;
+
+font-size:17px;
+
+line-height:1.8;
+
+border-bottom:
+1px solid #eee;
+
+}
+
+
+
+.button{
+
+display:block;
+
+padding:15px;
+
+margin-top:18px;
+
+background:#f8f8f8;
+
+text-decoration:none;
+
+color:black;
+
+border-radius:12px;
+
+text-align:center;
+
+font-size:16px;
+
+}
+
+
+
 .logout{
 
-display:inline-block;
+display:block;
 
-margin-top:20px;
+padding:15px;
 
-padding:12px 18px;
+margin-top:22px;
 
 background:#dc2626;
 
@@ -53,7 +142,11 @@ color:white;
 
 text-decoration:none;
 
-border-radius:10px;
+border-radius:12px;
+
+text-align:center;
+
+font-weight:bold;
 
 }
 
@@ -61,63 +154,143 @@ border-radius:10px;
 
 </head>
 
+
+
 <body>
+
+
 
 <div class="box">
 
-<h2>
+
+<div class="avatar">
+
+{{user['name'][0].upper()}}
+
+</div>
+
+
+
+<h2 class="center">
 
 My Profile
 
 </h2>
 
 
-<p>
+
+<div class="item">
 
 <b>Name:</b>
 
 {{user['name']}}
 
-</p>
+</div>
 
 
 
-<p>
+<div class="item">
 
 <b>Phone:</b>
 
 {{user['phone']}}
 
-</p>
+</div>
 
 
 
-<p>
+<div class="item">
 
 <b>Address:</b>
 
 {{user['address']}}
 
-</p>
+</div>
+
+<div class="item">
+
+<b>
+
+👥 Referral Code:
+
+</b>
+
+<br><br>
+
+{{user['referral_code']}}
+
+<br><br>
+
+<small>
+
+Invite friends →
++30 points
+
+</small>
+
+</div>
+
+<div class="item">
+
+<div
+class="item"
+
+onclick="
+document.getElementById(
+'loyaltyBox'
+).style.display='block'
+"
+
+style="
+cursor:pointer;
+">
+
+<a
+
+href="/loyalty"
+
+class="button">
+
+⭐ Loyalty Points
+
+<br><br>
+
+<b>
+
+{{user['points']}}
+
+Points
+
+</b>
+
+<br>
+
+Tap to open →
+
+</a>
 
 
+
+</button>
+
+</div>
+
+
+<a
+href="/"
+
+class="button">
+
+🏠 Home
+
+</a>
 
 
 
 <a
-
 href="/history"
 
-style="
-display:block;
-padding:14px;
-margin-top:15px;
-background:#f5f5f5;
-text-decoration:none;
-color:black;
-border-radius:10px;
-text-align:center;
-">
+class="button">
 
 📦 History
 
@@ -126,61 +299,26 @@ text-align:center;
 
 
 <a
+href="https://wa.me/919945783602"
 
-href="https://wa.me/919980156144"
-
-style="
-display:block;
-padding:14px;
-margin-top:15px;
-background:#f5f5f5;
-text-decoration:none;
-color:black;
-border-radius:10px;
-text-align:center;
-">
+class="button">
 
 💬 Contact Support
 
 </a>
 
-<a
 
-href="/"
-
-style="
-display:block;
-padding:14px;
-margin-top:15px;
-background:#f5f5f5;
-text-decoration:none;
-color:black;
-border-radius:10px;
-text-align:center;
-">
-
-🏠 Home
-
-</a>
 
 <a
-
 href="/edit-profile"
 
-style="
-display:block;
-padding:14px;
-margin-top:15px;
-background:#f5f5f5;
-text-decoration:none;
-color:black;
-border-radius:10px;
-text-align:center;
-">
+class="button">
 
 ✏️ Change Address / PIN
 
 </a>
+
+
 
 <a
 href="/logout"
@@ -190,6 +328,8 @@ class="logout">
 Logout
 
 </a>
+
+
 
 </div>
 

@@ -13,8 +13,45 @@ def get_db():
 
 conn = get_db()
 
-conn.execute('''
-CREATE TABLE IF NOT EXISTS bookings (
+
+conn.execute(
+
+'''
+
+CREATE TABLE IF NOT EXISTS users(
+
+id INTEGER PRIMARY KEY AUTOINCREMENT,
+
+phone TEXT UNIQUE,
+
+name TEXT,
+
+address TEXT,
+
+pin TEXT,
+
+points INTEGER DEFAULT 0,
+
+referral_code TEXT UNIQUE,
+
+used_referral TEXT DEFAULT '',
+
+ads_watched INTEGER DEFAULT 0,
+
+apps_installed INTEGER DEFAULT 0
+
+)
+
+'''
+
+)
+
+
+conn.execute(
+
+'''
+
+CREATE TABLE IF NOT EXISTS bookings(
 
 id INTEGER PRIMARY KEY AUTOINCREMENT,
 
@@ -30,39 +67,19 @@ date TEXT,
 
 time TEXT,
 
-image TEXT,
-
 status TEXT,
 
 assigned_to TEXT
 
 )
 
-''')
-
-
-conn.execute('''
-
-CREATE TABLE IF NOT EXISTS users(
-
-id INTEGER PRIMARY KEY AUTOINCREMENT,
-
-phone TEXT UNIQUE,
-
-name TEXT,
-
-address TEXT,
-
-pin TEXT
+'''
 
 )
-
-''')
 
 
 conn.commit()
 conn.close()
-
 
 app = Flask(__name__)
 app.secret_key = "secret123"
@@ -101,16 +118,31 @@ def submit():
 
     conn = get_db()
 
+
     user = conn.execute(
+
         '''
+
         SELECT *
+
         FROM users
+
         WHERE phone=?
+
         ''',
 
         (session["phone"],)
 
     ).fetchone()
+
+
+    if user is None:
+
+        session.clear()
+
+        return redirect(
+            '/customer-login'
+        )
 
 
     name = user["name"]
@@ -124,6 +156,7 @@ def submit():
 
 
     conn.execute(
+
         '''
 
         INSERT INTO bookings(
@@ -190,8 +223,8 @@ def submit():
 
     )
 
-    conn.commit()
 
+    conn.commit()
 
 
     message = f"""
@@ -228,11 +261,9 @@ Time:
 
         data={
 
-            "chat_id":
-            CHAT_ID,
+            "chat_id": CHAT_ID,
 
-            "text":
-            message
+            "text": message
 
         }
 
@@ -256,35 +287,116 @@ def login():
 
 @app.route('/admin')
 def admin():
+
     if not session.get('admin'):
         return redirect('/login')
-    return render_template('admin.html', bookings=bookings)
+
+
+    conn = get_db()
+
+
+    bookings = conn.execute(
+
+        '''
+
+        SELECT *
+
+        FROM bookings
+
+        ORDER BY id DESC
+
+        '''
+
+    ).fetchall()
+
+
+    return render_template(
+
+        'admin.html',
+
+        bookings=bookings
+
+    )
 
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
     return send_from_directory(UPLOAD_FOLDER, filename)
-@app.route('/update-status/<int:index>')
-def update_status(index):
-    if bookings[index]["status"] == "Pending":
-        bookings[index]["status"] = "Done"
-    else:
-        bookings[index]["status"] = "Pending"
-    return redirect('/admin')
-@app.route('/update/<int:index>', methods=['POST'])
-def update(index):
+
+
+@app.route('/update/<int:id>', methods=['POST'])
+def update(id):
+
     worker = request.form['worker']
+
     status = request.form['status']
 
-    bookings[index]['assigned_to'] = worker
-    bookings[index]['status'] = status
 
-    return redirect('/admin')
+    conn = get_db()
 
 
-@app.route('/delete/<int:index>')
-def delete(index):
-    bookings.pop(index)
-    return redirect('/admin')
+    conn.execute(
+
+        '''
+
+        UPDATE bookings
+
+        SET
+
+        assigned_to=?,
+
+        status=?
+
+        WHERE id=?
+
+        ''',
+
+        (
+
+        worker,
+
+        status,
+
+        id
+
+        )
+
+    )
+
+
+    conn.commit()
+
+
+    return redirect(
+        '/admin'
+    )
+
+@app.route('/delete/<int:id>')
+def delete(id):
+
+    conn = get_db()
+
+
+    conn.execute(
+
+        '''
+
+        DELETE FROM bookings
+
+        WHERE id=?
+
+        ''',
+
+        (id,)
+
+    )
+
+
+    conn.commit()
+
+
+    return redirect(
+        '/admin'
+    )
 
 @app.route('/privacy')
 def privacy():
@@ -323,22 +435,42 @@ def profile():
     if "phone" not in session:
         return redirect('/customer-login')
 
+
     conn = get_db()
 
     user = conn.execute(
+
         '''
+
         SELECT *
+
         FROM users
+
         WHERE phone=?
+
         ''',
+
         (session["phone"],)
+
     ).fetchone()
 
-    return render_template(
-        'profile.html',
-        user=user
-    )
 
+    if user is None:
+
+        session.clear()
+
+        return redirect(
+            '/customer-login'
+        )
+
+
+    return render_template(
+
+        'profile.html',
+
+        user=user
+
+    )
 
 @app.route('/logout')
 def logout():
@@ -352,34 +484,174 @@ def customer_signup():
     phone = request.form['phone']
     address = request.form['address']
     pin = request.form['pin']
+
+    referral = request.form.get(
+        'referral',
+        ''
+    )
+
+
     if not (
-        pin.isdigit() and len(pin) == 6
+        pin.isdigit()
+        and
+        len(pin) == 6
     ):
+
         return "PIN must be exactly 6 numbers"
+
 
     conn = get_db()
 
+
+    my_referral = "QH24" + phone[-4:]
+
+
     conn.execute(
+
         '''
 
-        INSERT OR REPLACE INTO users
+        INSERT OR REPLACE INTO users(
 
-        (name, phone, address, pin)
+        name,
 
-        VALUES (?, ?, ?, ?)
+        phone,
+
+        address,
+
+        pin,
+
+        points,
+
+        referral_code,
+
+        used_referral
+
+        )
+
+        VALUES(
+
+        ?,
+
+        ?,
+
+        ?,
+
+        ?,
+
+        ?,
+
+        ?,
+
+        ?
+
+        )
 
         ''',
 
-        (name, phone, address, pin)
+        (
+
+        name,
+
+        phone,
+
+        address,
+
+        pin,
+
+        0,
+
+        my_referral,
+
+        ""
+
+        )
 
     )
 
+
+    if referral:
+
+        already_used = conn.execute(
+
+            '''
+
+            SELECT used_referral
+
+            FROM users
+
+            WHERE phone = ?
+
+            ''',
+
+            (phone,)
+
+        ).fetchone()
+
+
+        if (
+
+            already_used
+
+            and
+
+            already_used['used_referral']
+
+        ):
+
+            pass
+
+
+        else:
+
+            conn.execute(
+
+                '''
+
+                UPDATE users
+
+                SET points = points + 30
+
+                WHERE referral_code = ?
+
+                ''',
+
+                (referral,)
+
+            )
+
+
+            conn.execute(
+
+                '''
+
+                UPDATE users
+
+                SET used_referral = ?
+
+                WHERE phone = ?
+
+                ''',
+
+                (
+
+                referral,
+
+                phone
+
+                )
+
+            )
+
+
     conn.commit()
+
 
     session["phone"] = phone
 
-    return redirect('/profile')
 
+    return redirect(
+        '/profile'
+    )
 
 
 
@@ -544,6 +816,99 @@ def edit_profile():
 
         user=user
 
+    )
+
+@app.route('/loyalty')
+def loyalty():
+
+    if "phone" not in session:
+        return redirect('/customer-login')
+
+    conn = get_db()
+
+    user = conn.execute(
+
+        '''
+
+        SELECT *
+
+        FROM users
+
+        WHERE phone=?
+
+        ''',
+
+        (session["phone"],)
+
+    ).fetchone()
+
+
+    return render_template(
+
+        'loyalty.html',
+
+        user=user
+
+    )
+
+@app.route('/add-points/<phone>')
+def add_points(phone):
+
+    conn = get_db()
+
+
+    conn.execute(
+
+        '''
+
+        UPDATE users
+
+        SET points = points + 100
+
+        WHERE phone = ?
+
+        ''',
+
+        (phone,)
+
+    )
+
+
+    conn.commit()
+
+
+    return redirect(
+        '/admin'
+    )
+
+@app.route('/remove-points/<phone>')
+def remove_points(phone):
+
+    conn = get_db()
+
+
+    conn.execute(
+
+        '''
+
+        UPDATE users
+
+        SET points = MAX(points - 100, 0)
+
+        WHERE phone = ?
+
+        ''',
+
+        (phone,)
+
+    )
+
+
+    conn.commit()
+
+
+    return redirect(
+        '/admin'
     )
 
 if __name__ == '__main__':

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+
+<body style="
+font-family:Arial;
+background:#f5f5f5;
+padding:20px;
+">
+
+<h2>
+My History
+</h2>
+
+
+{% if bookings %}
+
+{% for booking in bookings %}
+
+<div style="
+padding:15px;
+margin:15px 0;
+background:white;
+border-radius:12px;
+box-shadow:
+0 4px 10px rgba(0,0,0,.08);
+">
+
+<b>
+{{booking['option']}}
+</b>
+
+<br><br>
+
+📅 {{booking['date']}}
+
+<br>
+
+⏰ {{booking['time']}}
+
+<br><br>
+
+Status:
+{{booking['status']}}
+
+</div>
+
+{% endfor %}
+
+
+
+{% else %}
+
+
+<div style="
+background:white;
+padding:30px;
+border-radius:15px;
+text-align:center;
+box-shadow:
+0 4px 10px rgba(0,0,0,.08);
+">
+
+<h3>
+
+📦 No bookings yet
+
+</h3>
+
+<p>
+
+Your bookings will appear here.
+
+</p>
+
+
+<a
+
+href="/"
+
+style="
+display:inline-block;
+padding:12px 18px;
+background:#D4AF37;
+color:white;
+text-decoration:none;
+border-radius:10px;
+">
+
+Book Service
+
+</a>
+
+</div>
+
+
+{% endif %}
+
+
+
+<br>
+
+<a href="/profile">
+
+← Back
+
+</a>
+
+</body>
+</html>

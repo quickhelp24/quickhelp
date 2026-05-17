@@ -2,47 +2,186 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <h2>Admin Panel</h2>
 <body style="background:#f3f4f6;">
-{% for b in bookings %}
-<p><b>Assigned To:</b> {{b.assigned_to}}</p>
-<form action="/update/{{loop.index0}}" method="POST">
+{% for booking in bookings %}
 
-    <input type="text" name="worker"
-    placeholder="Worker name"
-    value="{{b.assigned_to}}">
+<div
+style="
+border:1px solid #ccc;
+padding:15px;
+margin:15px;
+">
 
-    <select name="status">
-        <option value="Pending">Pending</option>
-        <option value="Assigned">Assigned</option>
-        <option value="Completed">Completed</option>
-    </select>
+<b>Name:</b>
+{{booking['name']}}
 
-    <button>Update</button>
+<br>
+
+<b>Phone:</b>
+{{booking['phone']}}
+
+<br>
+
+<b>Service:</b>
+{{booking['option']}}
+
+<br>
+
+<b>Date:</b>
+{{booking['date']}}
+
+<br>
+
+<b>Time:</b>
+{{booking['time']}}
+
+<br>
+
+<b>Status:</b>
+{{booking['status']}}
+
+<br>
+
+<b>Assigned To:</b>
+
+{{booking['assigned_to']}}
+
+<br><br>
+
+
+<form
+action="/update/{{booking['id']}}"
+method="POST">
+
+<input
+
+type="text"
+
+name="worker"
+
+value="{{booking['assigned_to']}}"
+
+placeholder="Worker name"
+
+
+style="
+padding:8px;
+margin-top:8px;
+">
+
+
+<select
+name="status"
+
+style="
+padding:8px;
+">
+
+<option
+value="Pending"
+
+{% if booking['status']=="Pending" %}
+selected
+{% endif %}
+>
+
+Pending
+
+</option>
+
+
+<option
+value="Assigned"
+
+{% if booking['status']=="Assigned" %}
+selected
+{% endif %}
+>
+
+Assigned
+
+</option>
+
+
+<option
+value="Completed"
+
+{% if booking['status']=="Completed" %}
+selected
+{% endif %}
+>
+
+Completed
+
+</option>
+
+</select>
+
+
+<button
+type="submit">
+
+Update
+
+</button>
 
 </form>
-<div style="border:1px solid #ccc; margin:10px; padding:10px; border-radius:10px;">
-
-<p><b>Name:</b> {{b.name}}</p>
-<p><b>Phone:</b> {{b.phone}}</p>
-<p><b>Service:</b> {{b.option}}</p>
-<p><b>Address:</b> {{b.address}}</p>
-<p><b>Date:</b> {{b.date}} | {{b.time}}</p>
-
-<p>
-<b>Status:</b> 
-<span style="color:{% if b.status == 'Done' %}green{% else %}red{% endif %}; font-weight:bold;">
-{{b.status}}
-</span>
-</p>
-
-<img src="/uploads/{{b.image}}" width="120"><br><br>
 
 
 
-<a href="/delete/{{loop.index0}}">
-<button style="background:red;color:white;padding:6px;border:none;border-radius:5px;">
+<br>
+
+<b>Assigned To:</b>
+
+{{booking['assigned_to']}}
+
+<br>
+
+<b>Status:</b>
+
+{{booking['status']}}
+
+
+<a
+href="/delete/{{booking['id']}}">
+
 Delete
-</button>
+
 </a>
 
+
+<br><br>
+
+
+<a
+href="/add-points/{{booking['phone']}}"
+
+style="
+background:green;
+padding:10px;
+color:white;
+text-decoration:none;
+">
+
++100 Points
+
+</a>
+
+<br><br>
+
+<a
+
+href="/remove-points/{{booking['phone']}}"
+
+style="
+background:red;
+padding:10px;
+color:white;
+text-decoration:none;
+">
+
+-100 Points
+
+</a>
 </div>
+
 {% endfor %}
