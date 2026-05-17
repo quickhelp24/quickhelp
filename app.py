@@ -51,7 +51,9 @@ phone TEXT UNIQUE,
 
 name TEXT,
 
-address TEXT
+address TEXT,
+
+pin TEXT
 
 )
 
@@ -72,7 +74,14 @@ bookings = []
 
 @app.route('/')
 def home():
-    return render_template('home.html')
+
+    logged_in = "phone" in session
+
+    return render_template(
+        'home.html',
+
+        logged_in=logged_in
+    )
 
 @app.route('/service/<service>')
 def service(service):
@@ -218,37 +227,132 @@ def profile():
         'profile.html',
         user=user
     )
-@app.route('/customer-login', methods=['GET', 'POST'])
+
+
+@app.route('/logout')
+def logout():
+    session.pop("phone", None)
+    return redirect('/')
+
+@app.route('/customer-signup', methods=['POST'])
+def customer_signup():
+
+    name = request.form['name']
+    phone = request.form['phone']
+    address = request.form['address']
+    pin = request.form['pin']
+
+    conn = get_db()
+
+    conn.execute(
+        '''
+
+        INSERT OR REPLACE INTO users
+
+        (name, phone, address, pin)
+
+        VALUES (?, ?, ?, ?)
+
+        ''',
+
+        (name, phone, address, pin)
+
+    )
+
+    conn.commit()
+
+    session["phone"] = phone
+
+    return redirect('/profile')
+
+
+
+
+@app.route('/customer-login', methods=['GET','POST'])
 def customer_login():
 
     if request.method == "POST":
 
-        name = request.form['name']
         phone = request.form['phone']
-        address = request.form['address']
+
+        pin = request.form['pin']
+
 
         conn = get_db()
 
-        conn.execute(
-            '''
-            INSERT OR REPLACE INTO users
-            (phone, name, address)
 
-            VALUES (?, ?, ?)
+        user = conn.execute(
+
+            '''
+
+            SELECT *
+
+            FROM users
+
+            WHERE phone=?
+
+            AND pin=?
+
             ''',
 
-            (phone, name, address)
+            (
 
-        )
+            phone,
 
-        conn.commit()
+            pin
 
-        session["phone"] = phone
+            )
 
-        return redirect('/profile')
+        ).fetchone()
+
+
+        if user:
+
+            session["phone"] = phone
+
+            return redirect(
+                '/profile'
+            )
+
+
+        return "Wrong PIN or phone"
+
 
     return render_template(
         'customer_login.html'
     )
+
+@app.route('/history')
+def history():
+
+    if "phone" not in session:
+        return redirect('/customer-login')
+
+    conn = get_db()
+
+    bookings = conn.execute(
+
+        '''
+
+        SELECT *
+
+        FROM bookings
+
+        WHERE phone=?
+
+        ''',
+
+        (session["phone"],)
+
+    ).fetchall()
+
+    return render_template(
+
+        'history.html',
+
+        bookings=bookings
+
+    )
+
 if __name__ == '__main__':
     app.run(debug=True)

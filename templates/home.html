@@ -249,30 +249,14 @@ z-index:999;
 <body style="background:#f3f4f6;">
   <div style="text-align:left; margin:30px;">
   <img src="/static/logoooooo.jpeg" height="150">
-</div>
+
 <div style="
 position:absolute;
 top:20px;
 right:20px;
 ">
 
-<a
-href="/customer-login"
-
-style="
-text-decoration:none;
-padding:10px 18px;
-background:#D4AF37;
-color:white;
-border-radius:10px;
-margin-right:10px;
-">
-
-Login
-
-</a>
-
-
+{% if logged_in %}
 
 <a
 href="/profile"
@@ -289,7 +273,29 @@ My Profile
 
 </a>
 
+{% else %}
+
+<a
+href="/customer-login"
+
+style="
+text-decoration:none;
+padding:10px 18px;
+background:#D4AF37;
+color:white;
+border-radius:10px;
+margin-right:10px;
+">
+
+Login / Sign Up
+
+</a>
+
+{% endif %}
+
 </div>
+
+
 <h1 style="
 text-align:center;
 

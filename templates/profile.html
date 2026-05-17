@@ -3,15 +3,67 @@
 
 <head>
 
-<title>
+<style>
 
-Profile
+body{
 
-</title>
+font-family:Arial;
+
+background:#f8f8f8;
+
+padding:30px;
+
+}
+
+
+.box{
+
+background:white;
+
+padding:25px;
+
+border-radius:20px;
+
+max-width:400px;
+
+margin:auto;
+
+box-shadow:
+0 8px 20px rgba(
+0,
+0,
+0,
+0.08
+);
+
+}
+
+
+.logout{
+
+display:inline-block;
+
+margin-top:20px;
+
+padding:12px 18px;
+
+background:#dc2626;
+
+color:white;
+
+text-decoration:none;
+
+border-radius:10px;
+
+}
+
+</style>
 
 </head>
 
 <body>
+
+<div class="box">
 
 <h2>
 
@@ -22,7 +74,7 @@ My Profile
 
 <p>
 
-Name:
+<b>Name:</b>
 
 {{user['name']}}
 
@@ -32,7 +84,7 @@ Name:
 
 <p>
 
-Phone:
+<b>Phone:</b>
 
 {{user['phone']}}
 
@@ -42,7 +94,7 @@ Phone:
 
 <p>
 
-Address:
+<b>Address:</b>
 
 {{user['address']}}
 
@@ -50,11 +102,77 @@ Address:
 
 
 
-<a href="/">
 
-Home
+
+<a
+
+href="/history"
+
+style="
+display:block;
+padding:14px;
+margin-top:15px;
+background:#f5f5f5;
+text-decoration:none;
+color:black;
+border-radius:10px;
+text-align:center;
+">
+
+📦 History
 
 </a>
+
+
+
+<a
+
+href="https://wa.me/919980156144"
+
+style="
+display:block;
+padding:14px;
+margin-top:15px;
+background:#f5f5f5;
+text-decoration:none;
+color:black;
+border-radius:10px;
+text-align:center;
+">
+
+💬 Contact Support
+
+</a>
+
+<a
+
+href="/"
+
+style="
+display:block;
+padding:14px;
+margin-top:15px;
+background:#f5f5f5;
+text-decoration:none;
+color:black;
+border-radius:10px;
+text-align:center;
+">
+
+🏠 Home
+
+</a>
+
+<a
+href="/logout"
+
+class="logout">
+
+Logout
+
+</a>
+
+</div>
 
 </body>
 
